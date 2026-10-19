@@ -8,7 +8,7 @@ By Gambit Mutant, for [The AEGIS Alliance](https://theaegisalliance.com).
 - [AEGIS Shop](https://shop.theaegisalliance.com)
 - [GitHub](https://github.com/GambitMutant/aegis-invites-for-facebook)
 
-Version 1.1.6
+Version 1.1.7
 
 ## What it does
 
@@ -46,7 +46,7 @@ Meta will limit the account if invites go out too quickly, or if the browser run
 
 ## Install
 
-Use the [v1.1.6 release](https://github.com/GambitMutant/aegis-invites-for-facebook/releases/tag/v1.1.6).
+Use the [v1.1.7 release](https://github.com/GambitMutant/aegis-invites-for-facebook/releases/tag/v1.1.7).
 
 - Chromium browsers use `aegis-invites-facebook.zip`
 - Firefox uses `aegis-invites-firefox.xpi`

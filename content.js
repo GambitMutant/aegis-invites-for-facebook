@@ -38,7 +38,7 @@
       '<div class="aegis-log" id="aegis-log"></div>' +
       '<div class="aegis-footer">' +
       '<button id="aegis-options" type="button">Settings</button>' +
-      '<a id="aegis-github" href="https://github.com/GambitMutant" target="_blank" rel="noopener noreferrer" aria-label="GitHub">' +
+      '<a id="aegis-github" href="https://github.com/GambitMutant/aegis-invites-for-facebook" target="_blank" rel="noopener noreferrer" aria-label="GitHub">' +
       '<img alt="" width="16" height="16" src="' + gh + '">' +
       "</a></div></div>";
     document.body.appendChild(panel);
