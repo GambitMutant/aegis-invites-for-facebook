@@ -1,0 +1,134 @@
+#aegis-panel {
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  width: 320px;
+  background: #000;
+  border: 1px solid #22d3ee;
+  border-radius: 16px;
+  box-shadow: 0 0 24px rgba(34, 211, 238, 0.28);
+  z-index: 2147483646;
+  font-family: "Segoe UI", system-ui, sans-serif;
+  color: #e7eef2;
+  overflow: hidden;
+}
+
+#aegis-panel.minimized .aegis-body { display: none; }
+#aegis-panel.minimized { width: 240px; }
+
+.aegis-header {
+  background: #22d3ee;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: move;
+  user-select: none;
+}
+
+.aegis-logo {
+  flex: 1;
+  font-weight: 750;
+  font-size: 13px;
+  line-height: 1.25;
+  color: #041016;
+}
+
+#aegis-minimize {
+  background: none;
+  border: none;
+  color: #041016;
+  font-size: 20px;
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+}
+
+.aegis-body { padding: 12px; }
+
+.aegis-status {
+  background: rgba(34, 211, 238, 0.1);
+  border-left: 3px solid #22d3ee;
+  padding: 8px 10px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  font-size: 13px;
+}
+
+.aegis-stats { font-size: 13px; margin-bottom: 8px; color: #8ea0ab; }
+.aegis-stats strong { color: #22d3ee; font-size: 16px; }
+
+.aegis-limit {
+  display: block;
+  font-size: 12px;
+  color: #8ea0ab;
+  margin-bottom: 10px;
+}
+
+.aegis-limit input {
+  display: block;
+  width: 100%;
+  margin-top: 4px;
+  box-sizing: border-box;
+  background: #0c1218;
+  color: #e7eef2;
+  border: 1px solid #24343f;
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 14px;
+}
+
+.aegis-controls { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
+
+.aegis-btn {
+  padding: 10px 14px;
+  border: 1px solid #24343f;
+  border-radius: 8px;
+  font-weight: 650;
+  cursor: pointer;
+  font-size: 13px;
+  background: #10151c;
+  color: #e7eef2;
+}
+
+.aegis-btn.primary { background: #22d3ee; color: #041016; border-color: #22d3ee; }
+.aegis-btn.danger { background: #ef4444; color: #fff; border-color: #ef4444; }
+.aegis-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.aegis-log {
+  background: #0c1218;
+  border-radius: 8px;
+  padding: 8px;
+  max-height: 110px;
+  overflow-y: auto;
+  font-size: 11px;
+  font-family: ui-monospace, monospace;
+  margin-bottom: 10px;
+}
+
+.log-success { color: #4ade80; }
+.log-error { color: #f87171; }
+.log-warn { color: #fbbf24; }
+.log-info { color: #8ea0ab; }
+
+.aegis-footer { display: flex; justify-content: space-between; align-items: center; }
+
+#aegis-options {
+  background: none;
+  border: 1px solid #24343f;
+  color: #8ea0ab;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+#aegis-options:hover { border-color: #22d3ee; color: #22d3ee; }
+
+#aegis-github {
+  display: inline-flex;
+  padding: 4px;
+  border-radius: 6px;
+}
+
+#aegis-github:hover { background: #162029; }
