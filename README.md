@@ -124,4 +124,4 @@ The crypto addresses above are `0x` addresses. Send each one on the network that
 
 ## A note on Facebook’s terms
 
-Automating invites can violate Facebook’s terms and can lead to warnings or limits. Use a separate browser, keep that window partly visible, keep the default delay or slower, and take a 20 to 30 minute break after about 1000 invites.
+Extensions like this one are allowed on Facebook. Using it incorrectly can still break Facebook’s terms or bring warnings and limits. Use a separate browser, keep that window partly visible, keep the default delay or slower, and take a 20 to 30 minute break after about 1000 invites.
