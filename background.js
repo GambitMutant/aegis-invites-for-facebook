@@ -9,6 +9,7 @@ const DEFAULT_SETTINGS = {
   scanComments: true,
   followButtons: "skip",
   waitBetweenPosts: true,
+  resumeAfterLimit: true,
   randomizeOrder: true,
   multiPageUrls: [],
   realTimeInterval: 5,

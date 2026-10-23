@@ -7,6 +7,7 @@ const DEFAULTS = {
   scanComments: true,
   followButtons: "skip",
   waitBetweenPosts: true,
+  resumeAfterLimit: true,
   randomizeOrder: true,
   realTimeInterval: 5,
   multiPageUrls: []
@@ -26,6 +27,7 @@ function readForm() {
     scanComments: document.getElementById("scanComments").checked,
     followButtons: document.getElementById("followButtons").value === "click" ? "click" : "skip",
     waitBetweenPosts: document.getElementById("waitBetweenPosts").checked,
+    resumeAfterLimit: document.getElementById("resumeAfterLimit").checked,
     randomizeOrder: document.getElementById("randomize").checked,
     realTimeInterval: num("rtInterval", DEFAULTS.realTimeInterval),
     multiPageUrls: document.getElementById("urls").value.split("\n").map((u) => u.trim()).filter(Boolean)
@@ -42,6 +44,7 @@ function fillForm(s) {
   document.getElementById("scanComments").checked = src.scanComments !== false;
   document.getElementById("followButtons").value = src.followButtons === "click" ? "click" : "skip";
   document.getElementById("waitBetweenPosts").checked = src.waitBetweenPosts !== false;
+  document.getElementById("resumeAfterLimit").checked = src.resumeAfterLimit !== false;
   document.getElementById("randomize").checked = src.randomizeOrder !== false;
   document.getElementById("rtInterval").value = src.realTimeInterval;
   document.getElementById("urls").value = (src.multiPageUrls || []).join("\n");

@@ -171,6 +171,40 @@
     await sleepWhileRunning(min + Math.random() * (max - min));
   }
 
+  function resumeAfterLimit() {
+    return currentSettings.resumeAfterLimit !== false;
+  }
+
+  async function waitTwentyMinutes(label) {
+    const total = 20 * 60;
+    for (let s = total; s > 0 && isRunning; s--) {
+      const m = Math.floor(s / 60);
+      const r = s % 60;
+      updateStatus(label + m + "m " + String(r).padStart(2, "0") + "s");
+      await sleep(1000);
+    }
+  }
+
+  async function continueSamePost(why) {
+    if (!why || why.indexOf("Run limit reached") !== 0 || !resumeAfterLimit()) return false;
+    log(why + ". Pausing 20 minutes, then continuing this post", "warn");
+    await waitTwentyMinutes("Same post resumes in ");
+    if (!isRunning) return false;
+    todayBase += invitesSent;
+    invitesSent = 0;
+    updateCount();
+    log("Starting invites again on this post", "info");
+    updateStatus("Scanning reactions…");
+    if (!document.querySelector('div[role="dialog"]')) {
+      const again = await ensureDialog(document);
+      if (!again) {
+        log("Reactions window is closed. Open it again to continue.", "warn");
+        return false;
+      }
+    }
+    return true;
+  }
+
   function limitReason() {
     if (invitesSent >= runCap()) return "Run limit reached (" + runCap() + ")";
     const daily = +currentSettings.dailyLimit || 0;
@@ -485,6 +519,7 @@
     while (isRunning) {
       const why = limitReason();
       if (why) {
+        if (await continueSamePost(why)) continue;
         log(why, "warn");
         return;
       }
@@ -560,7 +595,11 @@
       log((followed ? "Follow clicked (" : "Invite sent (") + invitesSent + ")", "success");
       await sleepWhileRunning(200);
       stripMedia(row || target);
-      if (!isRunning || limitReason()) return;
+      const whyNow = limitReason();
+      if (whyNow) {
+        if (await continueSamePost(whyNow)) continue;
+        return;
+      }
       if (invitesSent % 6 === 0) {
         const freed = unloadRam(scroller || dialog);
         if (freed) log("RAM unload freed " + freed + " rows", "info");
@@ -694,14 +733,8 @@
 
   async function waitBetweenPosts() {
     if (currentSettings.waitBetweenPosts === false) return;
-    const total = 20 * 60;
     log("Waiting 20 minutes before the next post", "warn");
-    for (let s = total; s > 0 && isRunning; s--) {
-      const m = Math.floor(s / 60);
-      const r = s % 60;
-      updateStatus("Next post in " + m + "m " + String(r).padStart(2, "0") + "s");
-      await sleep(1000);
-    }
+    await waitTwentyMinutes("Next post in ");
     if (isRunning) updateStatus("Scanning posts…");
   }
 

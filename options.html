@@ -20,7 +20,7 @@
       <label>Max reactions this run
         <input type="number" id="runLimit" min="1" max="100000" step="1">
       </label>
-      <p class="hint">Stops the run at this number. Default 1000. Every 40 invites, the run pauses for one minute.</p>
+      <p class="hint">Each batch stops at this number. Default 1000. Every 40 invites, the run pauses for one minute.</p>
       <label>Min delay between invites (ms)
         <input type="number" id="delayMin" min="200" max="20000">
       </label>
@@ -34,6 +34,8 @@
       <label>Max posts or comment threads per scan
         <input type="number" id="maxPosts" min="1" max="100">
       </label>
+      <label class="checkbox"><input type="checkbox" id="resumeAfterLimit"> After the invite limit, wait 20 minutes and continue the same post</label>
+      <p class="hint">On by default. When Max reactions this run is reached, the scan pauses 20 minutes, then starts inviting again on that same post. It keeps doing that until the Invite buttons run out, you press Stop, or the daily limit is hit. Leave the reactions window open. Turn this off for a hard stop at the limit.</p>
       <label class="checkbox"><input type="checkbox" id="waitBetweenPosts"> Wait 20 minutes before the next post</label>
       <p class="hint">Start Invite Scan only. After each post or Facebook comment thread, it waits 20 minutes before opening the next one. That pause is there so Meta is less likely to time out the invite feature. Scan Current Post does not wait. Turn this off only if you accept that risk. Stop still ends the wait.</p>
     </section>

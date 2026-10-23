@@ -1,14 +1,5 @@
 # AEGIS Invites for Facebook
 
-## Credit and terms
-
-**The AEGIS Alliance** is the original author, creator, and developer of this repository.
-
-- Original repository: https://github.com/GambitMutant/aegis-invites-for-facebook
-- Forks, copies, derivative works, and any other reuse must credit **The AEGIS Alliance**, link to that original repository in the README and the repository description, and keep the donation and fee information in this repository intact and unmodified.
-- Where a fee is collected, including the disclosed cryptocurrency fee, the destination of that fee must not be changed, and the keys or addresses that send it must not be modified or decrypted.
-- Use is subject to the [AEGIS Source-Available License](LICENSE) (also in [TERMS.md](TERMS.md)). This project is **source-available**, not open source under the Open Source Initiative definition. Unauthorized use that violates the license is not allowed.
-
 Invite people who reacted to your Facebook Page posts. The on-page panel scrolls the reaction list, clicks buttons that say Invite, skips Follow unless you turn that on, pauses as it goes, and clears rows it has already passed so a large post stays responsive.
 
 It also runs from Meta Business Suite. Scan Current Post works when you open a post’s reactions yourself. Start Invite Scan walks Inbox, then Facebook comments, one thread at a time.
@@ -19,7 +10,7 @@ By Gambit Mutant, for [The AEGIS Alliance](https://theaegisalliance.com).
 - [AEGIS Shop](https://shop.theaegisalliance.com)
 - [GitHub](https://github.com/GambitMutant/aegis-invites-for-facebook)
 
-Version 1.1.11
+Version 1.1.10
 
 ## What it does
 
@@ -29,9 +20,10 @@ Version 1.1.11
 - Scrolls the reactions list, and the page when needed, so later invites actually load
 - Clicks only when that button is on screen
 - Pauses for one minute after every 40 invites
+- After the invite limit, waits 20 minutes and continues the same post. That is on by default
 - Start Invite Scan can wait 20 minutes before the next post or comment thread. That is on by default
 - Frees photos and rows that have already scrolled past, so big posts do not get sluggish
-- Stops at the run limit you set. The default is 1000
+- Each batch stops at the run limit you set. The default is 1000
 
 ## How to use it
 
@@ -41,9 +33,9 @@ Version 1.1.11
 4. Use the on-page panel:
    - **Scan Current Post** invites from the reactions list you already opened. This is the one to use when you opened a post’s reactions yourself, including from a Business Suite comment.
    - **Start Invite Scan** walks posts on a Facebook feed. In Meta Business Suite, open **Inbox**, then **Facebook comments**, and use this button. It opens each comment thread, finds that post’s reactions, invites, then moves on.
-   - **Stop** ends the run, including a 20 minute wait between posts.
+   - **Stop** ends the run, including either 20 minute wait.
    - **Settings** opens the options page.
-   - **Max reactions this run** is the cap for this run. Leave it at 1000 unless you have a reason to change it.
+   - **Max reactions this run** is the size of one batch. Leave it at 1000 unless you have a reason to change it.
 5. The toolbar button opens a small popup with today’s count, the all-time count, and Settings. The GitHub icon opens this repository.
 
 You can leave the reactions window open between runs. The next Scan Current Post continues with the people still listed there.
@@ -52,7 +44,8 @@ You can leave the reactions window open between runs. The next Scan Current Post
 
 Open Settings from the panel or the toolbar popup, change what you need, and click **Save settings**.
 
-- **Max reactions this run.** Default 1000.
+- **Max reactions this run.** Default 1000. This is one batch, not necessarily the end of the post.
+- **After the invite limit, wait 20 minutes and continue the same post.** On by default. When the batch limit is reached, the scan pauses 20 minutes, then starts inviting again on that same post. It repeats until the Invite buttons run out, you press Stop, or the daily limit is hit. Leave the reactions window open during the pause. Turn this off if you want a hard stop at the limit.
 - **Min and max delay.** Default about 1.5 to 4.5 seconds between invites. Slower is fine. Faster is not.
 - **Daily invite limit.** A run also stops when today’s total reaches this. Default 2000.
 - **Max posts or comment threads per scan.** How many posts, or inbox threads, Start Invite Scan will open. Default 20.
@@ -68,12 +61,12 @@ Meta can limit how often the invite feature can be used if the clicks are too fa
 - Keep at least 5–10% of that browser window visible on screen the whole time. Do not fully minimize it, and do not cover it completely.
 - Leave the pause between invites at the default, about 1.5 to 4.5 seconds. Make it slower if you want. Do not make it faster.
 - Leave the 20 minute wait between posts turned on when you use Start Invite Scan.
-- For a large reaction list, about 1000 invites in one run is enough. Wait 20 to 30 minutes before you start another run yourself. The extension already rests for one minute after every 40 invites.
-- The default run limit is 1000. That is the number to keep.
+- Leave the 20 minute pause after each 1000 invites turned on, and leave that post’s reactions window open so the next batch can continue.
+- The default batch size is 1000. That is the number to keep.
 
 ## Install
 
-Use the [v1.1.11 release](https://github.com/GambitMutant/aegis-invites-for-facebook/releases/tag/v1.1.11).
+Use the [v1.1.10 release](https://github.com/GambitMutant/aegis-invites-for-facebook/releases/tag/v1.1.10).
 
 - Chromium browsers use `aegis-invites-facebook.zip`
 - Firefox uses `aegis-invites-firefox.xpi`
@@ -152,4 +145,4 @@ Crypto accepted at Coinbase:
 
 ## A note on Facebook’s terms
 
-Extensions like this one are allowed on Facebook. Using it incorrectly can still cause a terms problem, a warning, or a limit. Use a separate browser, keep that window partly visible, keep the default delay or slower, leave the 20 minute wait on for Start Invite Scan, and keep a run around 1000 invites.
+Extensions like this one are allowed on Facebook. Using it incorrectly can still cause a terms problem, a warning, or a limit. Use a separate browser, keep that window partly visible, keep the default delay or slower, leave both 20 minute pauses on, and keep each batch around 1000 invites.
