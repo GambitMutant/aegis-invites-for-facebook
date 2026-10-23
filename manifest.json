@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "AEGIS Auto Inviter for Facebook",
-  "version": "1.1.15",
+  "version": "1.1.16",
   "description": "Invite reactors on Facebook and Business Suite. Skips Follow by default. A project of The AEGIS Alliance.",
   "author": "Gambit Mutant",
   "homepage_url": "https://github.com/GambitMutant/aegis-invites-for-facebook",

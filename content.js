@@ -280,13 +280,15 @@
   }
 
   function findWorkRoot() {
-    const dialogs = Array.from(document.querySelectorAll('div[role="dialog"]'));
-    if (!dialogs.length) return document.body;
-    dialogs.sort((a, b) => {
+    const dialogs = Array.from(document.querySelectorAll('[role="dialog"], [aria-modal="true"]'));
+    const reactions = dialogs.filter(isReactionsDialog);
+    const pool = reactions.length ? reactions : dialogs;
+    if (!pool.length) return document.body;
+    pool.sort((a, b) => {
       const score = (el) => el.querySelectorAll('[role="listitem"], [role="row"]').length * 20 + el.querySelectorAll('[role="button"], button').length;
       return score(b) - score(a);
     });
-    return dialogs[0];
+    return pool[0];
   }
 
   function press(el) {
@@ -603,18 +605,46 @@
     if (isRunning) updateStatus("Scanning reactions…");
   }
 
-  async function drainDialog() {
+  async function selectAllReactions(dialog) {
+    if (!dialog || !dialog.querySelectorAll) return;
+    const tabs = Array.from(dialog.querySelectorAll('[role="tab"]'));
+    const pool = tabs.length ? tabs : Array.from(dialog.querySelectorAll('button, [role="button"], a'));
+    const all = pool.find((el) => {
+      if (el.closest("#aegis-panel")) return false;
+      const name = (actionText(el) || layerName(el) || "").toLowerCase().replace(/\s+/g, " ").trim();
+      if (!name || name.length > 28) return false;
+      if (name === "all" || name === "all reactions") return true;
+      return /^all\b/.test(name) && /\d/.test(name) && !/comment|message|photo|video/.test(name);
+    });
+    if (!all) return;
+    if (all.getAttribute("aria-selected") === "true" || all.getAttribute("aria-pressed") === "true") {
+      log("All reactions", "info");
+      return;
+    }
+    press(all);
+    log("Switched to All reactions", "info");
+    await sleepWhileRunning(600);
+  }
+
+  async function drainDialog(root) {
     let stalled = 0;
     let lastSize = 0;
     let notedScroll = false;
+    let choseAll = false;
     while (isRunning) {
+      const dialog = root && root.isConnected ? root : findWorkRoot();
+      if (!choseAll) {
+        choseAll = true;
+        await selectAllReactions(dialog);
+        if (!isRunning) return;
+        continue;
+      }
       const why = limitReason();
       if (why) {
         if (await continueSamePost(why)) continue;
         log(why, "warn");
         return;
       }
-      const dialog = findWorkRoot();
       const scroller = findReactionScroller(dialog);
       const target = pickNext(findActionButtons(dialog), scroller);
       if (!target) {
@@ -755,7 +785,10 @@
 
   async function openReactions(scope) {
     const already = Array.from(document.querySelectorAll('[role="dialog"], [aria-modal="true"]')).find(isReactionsDialog);
-    if (already) return already;
+    if (already) {
+      log("Reactions already open", "info");
+      return already;
+    }
     log("Opening post reactions", "info");
     const panes = [];
     const thread = threadPane();
@@ -925,7 +958,7 @@
       const dialog = await openThreadReactions();
       if (dialog && isRunning) {
         await sleepWhileRunning(400);
-        await drainDialog();
+        await drainDialog(dialog);
         closeDialog();
       } else {
         log("No reactions on this thread", "info");
@@ -943,7 +976,7 @@
     if (!dialog || !isRunning) return;
     updateStatus("Scanning reactions…");
     await sleepWhileRunning(400);
-    await drainDialog();
+    await drainDialog(dialog);
   }
 
   async function runFeed() {
@@ -972,7 +1005,7 @@
       const dialog = await ensureDialog(post);
       if (dialog && isRunning) {
         await sleepWhileRunning(400);
-        await drainDialog();
+        await drainDialog(dialog);
         closeDialog();
       }
       if (i < posts.length - 1 && isRunning && !limitReason()) await waitBetweenPosts();
