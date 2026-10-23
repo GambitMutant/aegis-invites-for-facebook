@@ -1,4 +1,4 @@
-# AEGIS Invites for Facebook
+# AEGIS Auto Inviter for Facebook
 
 ## Credit and terms
 
@@ -19,7 +19,7 @@ By Gambit Mutant, for [The AEGIS Alliance](https://theaegisalliance.com).
 - [AEGIS Shop](https://shop.theaegisalliance.com)
 - [GitHub](https://github.com/GambitMutant/aegis-invites-for-facebook)
 
-Version 1.1.13
+Version 1.1.14
 
 ## What it does
 
@@ -75,7 +75,7 @@ Meta can limit how often the invite feature can be used if the clicks are too fa
 
 ## Install
 
-Use the [v1.1.13 release](https://github.com/GambitMutant/aegis-invites-for-facebook/releases/tag/v1.1.13).
+Use the [v1.1.14 release](https://github.com/GambitMutant/aegis-invites-for-facebook/releases/tag/v1.1.14).
 
 - Chromium browsers use `aegis-invites-facebook.zip`
 - Firefox uses `aegis-invites-firefox.xpi`
@@ -122,15 +122,15 @@ Safari will not load the zip the way Chrome does. On a Mac, Xcode wraps the fold
 3. Open Terminal and run this. Change the last path if your folder is somewhere else:
 
 ```
-xcrun safari-web-extension-converter --macos-only --copy-resources --project-location ~/Desktop/AEGIS-Invites --app-name "AEGIS Invites" ~/Downloads/aegis-invites-facebook
+xcrun safari-web-extension-converter --macos-only --copy-resources --project-location ~/Desktop/AEGIS-Auto-Inviter --app-name "AEGIS Auto Inviter" ~/Downloads/aegis-invites-facebook
 ```
 
-4. Xcode should open the new project. If it does not, open the `.xcodeproj` inside `~/Desktop/AEGIS-Invites`.
-5. At the top of Xcode, select the **AEGIS Invites** macOS app scheme, not the extension target by itself.
+4. Xcode should open the new project. If it does not, open the `.xcodeproj` inside `~/Desktop/AEGIS-Auto-Inviter`.
+5. At the top of Xcode, select the **AEGIS Auto Inviter** macOS app scheme, not the extension target by itself.
 6. If signing fails, open **Signing & Capabilities** and set Team to your Apple ID. A free personal team is enough for your own Mac. Then press Run (the play button, or Command-R).
 7. The wrapper app opens. Leave it running the first time. That launch registers the extension with Safari.
-8. In Safari, open **Settings → Extensions**. Turn on **AEGIS Invites for Facebook** and allow it on facebook.com.
-9. If it is missing from that list, the build is still unsigned. In Safari, open **Settings → Advanced** and turn on **Show features for web developers** (Safari 17 or later) or **Show Develop menu in menu bar**. Open the **Developer** tab and turn on **Allow unsigned extensions**. That checkbox resets every time you quit Safari, so turn it on again next launch. Then go back to Extensions and enable AEGIS Invites for Facebook.
+8. In Safari, open **Settings → Extensions**. Turn on **AEGIS Auto Inviter for Facebook** and allow it on facebook.com.
+9. If it is missing from that list, the build is still unsigned. In Safari, open **Settings → Advanced** and turn on **Show features for web developers** (Safari 17 or later) or **Show Develop menu in menu bar**. Open the **Developer** tab and turn on **Allow unsigned extensions**. That checkbox resets every time you quit Safari, so turn it on again next launch. Then go back to Extensions and enable AEGIS Auto Inviter for Facebook.
 10. Open a Facebook post. You should see the toolbar button and the on-page panel.
 
 `--copy-resources` copies the files into the Xcode project. After you download a newer zip, copy the new files over the ones in that project, then run the Xcode project again.

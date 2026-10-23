@@ -21,7 +21,7 @@
     panel.id = "aegis-panel";
     panel.innerHTML =
       '<div class="aegis-header">' +
-      '<span class="aegis-logo">AEGIS Invites for Facebook</span>' +
+      '<span class="aegis-logo">AEGIS Auto Inviter for Facebook</span>' +
       '<button id="aegis-minimize" type="button" aria-label="Minimize">−</button>' +
       "</div>" +
       '<div class="aegis-body">' +
