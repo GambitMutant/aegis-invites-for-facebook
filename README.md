@@ -19,11 +19,11 @@ By Gambit Mutant, for [The AEGIS Alliance](https://theaegisalliance.com).
 - [AEGIS Shop](https://shop.theaegisalliance.com)
 - [GitHub](https://github.com/GambitMutant/aegis-invites-for-facebook)
 
-Version 1.1.12
+Version 1.1.13
 
 ## What it does
 
-- Works on facebook.com and Meta Business Suite, including Inbox → Facebook comments
+- Opens the post’s reactions by itself on Facebook and in Meta Business Suite Inbox → Facebook comments, before the first invite
 - Clicks a button only when its label says Invite
 - Skips a reaction that has a Follow button. Settings can allow Follow clicks instead. The default is skip
 - Scrolls the reactions list, and the page when needed, so later invites actually load
@@ -38,10 +38,10 @@ Version 1.1.12
 
 1. Install the extension in the browser you will use for inviting. See below.
 2. Open the Facebook post, or Meta Business Suite.
-3. For one post, open that post’s reactions and leave the window open.
+3. You do not have to open the reactions list yourself. Scan Current Post and Start Invite Scan both open it.
 4. Use the on-page panel:
-   - **Scan Current Post** invites from the reactions list you already opened. This is the one to use when you opened a post’s reactions yourself, including from a Business Suite comment.
-   - **Start Invite Scan** walks posts on a Facebook feed. In Meta Business Suite, open **Inbox**, then **Facebook comments**, and use this button. It opens each comment thread, finds that post’s reactions, invites, then moves on.
+   - **Scan Current Post** opens the reactions on the post you are looking at, then invites. On Facebook that is the post on screen. In Meta Business Suite it is the post in the comment thread you have open.
+   - **Start Invite Scan** walks posts on a Facebook feed and opens each post’s reactions. In Meta Business Suite, open **Inbox**, then **Facebook comments**. It opens each comment thread, opens that post’s reactions, then invites.
    - **Stop** ends the run, including either 20 minute wait.
    - **Settings** opens the options page.
    - **Max reactions this run** is the size of one batch. Leave it at 1000 unless you have a reason to change it.
@@ -75,7 +75,7 @@ Meta can limit how often the invite feature can be used if the clicks are too fa
 
 ## Install
 
-Use the [v1.1.12 release](https://github.com/GambitMutant/aegis-invites-for-facebook/releases/tag/v1.1.12).
+Use the [v1.1.13 release](https://github.com/GambitMutant/aegis-invites-for-facebook/releases/tag/v1.1.13).
 
 - Chromium browsers use `aegis-invites-facebook.zip`
 - Firefox uses `aegis-invites-firefox.xpi`

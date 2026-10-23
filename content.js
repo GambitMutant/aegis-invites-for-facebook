@@ -289,22 +289,74 @@
     return dialogs[0];
   }
 
+  function press(el) {
+    if (!el) return;
+    const opts = { bubbles: true, cancelable: true, view: window };
+    try {
+      el.dispatchEvent(new PointerEvent("pointerdown", opts));
+      el.dispatchEvent(new MouseEvent("mousedown", opts));
+      el.dispatchEvent(new PointerEvent("pointerup", opts));
+      el.dispatchEvent(new MouseEvent("mouseup", opts));
+    } catch (e) {
+      /* a plain click still runs below */
+    }
+    el.click();
+  }
+
+  function isReactionsDialog(dialog) {
+    if (!dialog || dialog.closest("#aegis-panel")) return false;
+    const label = ((dialog.getAttribute("aria-label") || "") + " " + (dialog.getAttribute("aria-labelledby") ? "" : "")).toLowerCase();
+    if (/react/.test(label)) return true;
+    if (findActionButtons(dialog).length) return true;
+    const names = ["all", "like", "love", "care", "haha", "wow", "sad", "angry"];
+    let tabs = 0;
+    dialog.querySelectorAll('[role="tab"]').forEach((tab) => {
+      const name = actionText(tab);
+      if (names.indexOf(name) !== -1) tabs += 1;
+    });
+    return tabs >= 2;
+  }
+
+  function reactionScore(el) {
+    if (!el || el.closest("#aegis-panel")) return 0;
+    const aria = el.getAttribute("aria-label") || "";
+    const text = (el.innerText || "").trim().replace(/\s+/g, " ");
+    const blob = (aria + " " + text).toLowerCase();
+    if (/see who reacted|people who reacted|person reacted|all reactions|\breactions?\b|\breacted\b/.test(blob)) return 8;
+    if (el.matches && el.matches("img") && /^(like|love|care|haha|wow|sad|angry)\b/i.test(el.getAttribute("alt") || "")) return 5;
+    if (/\b(like|love|care|haha|wow|sad|angry)\b/.test(blob) && /\d/.test(blob) && blob.length < 90) return 6;
+    const href = el.getAttribute("href") || "";
+    if (/\/reactions|reaction_type/i.test(href)) return 8;
+    const imgs = el.querySelectorAll ? el.querySelectorAll("img[alt]") : [];
+    let faces = 0;
+    imgs.forEach((img) => {
+      const alt = (img.getAttribute("alt") || "").toLowerCase();
+      if (/^(like|love|care|haha|wow|sad|angry)\b/.test(alt)) faces += 1;
+    });
+    if (!faces) return 0;
+    if (/^[\d][\d,.\s]*[kmb]?$/i.test(text) || (text.length > 0 && text.length <= 20)) return 4 + faces;
+    return 0;
+  }
+
   function findReactionTriggers(scope) {
     const root = scope && scope.querySelectorAll ? scope : document;
-    const out = [];
-    root.querySelectorAll('[aria-label*="reaction" i], [aria-label*="reacted" i], a[href*="/reactions"]').forEach((el) => {
+    const nodes = root.querySelectorAll('a, button, [role="button"], [role="link"], [aria-label*="react" i], [aria-label*="Like" i], [aria-label*="Love" i], [aria-label*="Care" i], img[alt="Like" i], img[alt="Love" i], img[alt="Care" i], img[alt="Haha" i], img[alt="Wow" i], img[alt="Sad" i], img[alt="Angry" i]');
+    const hits = [];
+    const seen = new Set();
+    nodes.forEach((el) => {
       if (el.closest("#aegis-panel")) return;
-      const r = el.getBoundingClientRect();
-      if (r.width < 8 || r.height < 8) return;
-      if (r.bottom < 0 || r.top > window.innerHeight) return;
-      out.push(el);
+      const score = reactionScore(el);
+      if (!score) return;
+      const click = el.closest('a, button, [role="button"], [role="link"]') || el;
+      if (!click || seen.has(click) || click.closest("#aegis-panel")) return;
+      const r = click.getBoundingClientRect();
+      if (r.width < 8 || r.height < 8 || r.height > 96) return;
+      if (r.width > 460 && score < 8) return;
+      seen.add(click);
+      hits.push({ el: click, score: score, area: r.width * r.height });
     });
-    out.sort((a, b) => {
-      const ra = a.getBoundingClientRect();
-      const rb = b.getBoundingClientRect();
-      return ra.width * ra.height - rb.width * rb.height;
-    });
-    return out;
+    hits.sort((a, b) => b.score - a.score || a.area - b.area);
+    return hits.map((hit) => hit.el);
   }
 
   function scrollables(root) {
@@ -614,21 +666,57 @@
     if (btn) btn.click();
   }
 
-  async function ensureDialog(scope) {
-    let dialog = document.querySelector('div[role="dialog"]');
-    if (dialog) return dialog;
-    const triggers = findReactionTriggers(scope || document);
-    if (!triggers.length) {
-      log("No reactions control found", "warn");
-      return null;
+  async function openReactions(scope) {
+    const already = Array.from(document.querySelectorAll('div[role="dialog"]')).find(isReactionsDialog);
+    if (already) return already;
+    log("Opening post reactions", "info");
+    const root = scope && scope.querySelectorAll ? scope : document;
+    for (let attempt = 0; attempt < 6 && isRunning; attempt++) {
+      let triggers = findReactionTriggers(root);
+      if (!triggers.length && root !== document) triggers = findReactionTriggers(document);
+      if (triggers.length) {
+        const trigger = triggers[0];
+        try {
+          trigger.scrollIntoView({ block: "center", behavior: "instant" });
+        } catch (e) {
+          trigger.scrollIntoView(true);
+        }
+        await sleepWhileRunning(250);
+        const before = new Set(document.querySelectorAll('div[role="dialog"]'));
+        press(trigger);
+        for (let i = 0; i < 16 && isRunning; i++) {
+          await sleep(250);
+          const dialogs = Array.from(document.querySelectorAll('div[role="dialog"]'));
+          const known = dialogs.find(isReactionsDialog);
+          if (known) {
+            log("Reactions opened", "info");
+            return known;
+          }
+          const fresh = dialogs.find((dialog) => !before.has(dialog) && dialog.querySelector('[role="list"], [role="listitem"], [role="row"]'));
+          if (fresh) {
+            log("Reactions opened", "info");
+            return fresh;
+          }
+        }
+      }
+      const view = findViewPost(root) || (root !== document ? findViewPost(document) : null);
+      if (view && attempt < 2) {
+        press(view);
+        log("Opened the post", "info");
+        await sleepWhileRunning(1000);
+        continue;
+      }
+      if (findActionButtons(root).length) return root === document ? document.body : root;
+      if (root !== document && root.scrollHeight > root.clientHeight + 20) root.scrollTop += 420;
+      else window.scrollBy(0, 520);
+      await sleepWhileRunning(400);
     }
-    triggers[0].click();
-    for (let i = 0; i < 12 && isRunning; i++) {
-      await sleep(200);
-      dialog = document.querySelector('div[role="dialog"]');
-      if (dialog) return dialog;
-    }
+    log("Could not open post reactions", "warn");
     return null;
+  }
+
+  async function ensureDialog(scope) {
+    return openReactions(scope || document);
   }
 
   function inBusinessInbox() {
@@ -693,42 +781,13 @@
       if (el.closest("#aegis-panel")) continue;
       const low = actionText(el) || buttonLabel(el).toLowerCase();
       if (!low || low.length > 40) continue;
-      if (low === "view post" || low === "see post" || low.startsWith("view post") || low.startsWith("see post")) return el;
+      if (low === "view post" || low === "see post" || low === "open post" || low.startsWith("view post") || low.startsWith("see post") || low.startsWith("open post") || low.startsWith("view the post")) return el;
     }
     return null;
   }
 
   async function openThreadReactions() {
-    const pane = centerPane();
-    for (let attempt = 0; attempt < 5 && isRunning; attempt++) {
-      const existing = document.querySelector('div[role="dialog"]');
-      if (existing && findActionButtons(existing).length) return existing;
-      const triggers = findReactionTriggers(pane);
-      if (triggers.length) {
-        triggers[0].click();
-        for (let i = 0; i < 12 && isRunning; i++) {
-          await sleep(200);
-          const dialog = document.querySelector('div[role="dialog"]');
-          if (dialog) return dialog;
-        }
-      }
-      if (attempt === 0) {
-        const view = findViewPost(pane);
-        if (view) {
-          view.click();
-          log("Opened the post from this comment", "info");
-          await sleepWhileRunning(800);
-          continue;
-        }
-      }
-      try {
-        pane.scrollTop += 320;
-      } catch (e) {
-        /* the pane may not scroll */
-      }
-      await sleepWhileRunning(350);
-    }
-    return null;
+    return openReactions(centerPane());
   }
 
   async function waitBetweenPosts() {
@@ -790,9 +849,10 @@
   }
 
   async function runCurrentPost() {
-    updateStatus("Scanning reactions…");
+    updateStatus("Opening reactions…");
     const dialog = await ensureDialog(document);
     if (!dialog || !isRunning) return;
+    updateStatus("Scanning reactions…");
     await sleepWhileRunning(400);
     await drainDialog();
   }
