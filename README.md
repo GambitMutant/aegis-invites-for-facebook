@@ -1,6 +1,8 @@
 # AEGIS Invites for Facebook
 
-Invite people who reacted to your Facebook Page posts. The on-page panel scrolls the reaction list, clicks Invite only when the button is on screen, pauses as it goes, and clears rows it has already passed so a large post stays responsive.
+Invite people who reacted to your Facebook Page posts. The on-page panel scrolls the reaction list, clicks buttons that say Invite, skips Follow unless you turn that on, pauses as it goes, and clears rows it has already passed so a large post stays responsive.
+
+It also runs from Meta Business Suite. Scan Current Post works when you open a post’s reactions yourself. Start Invite Scan walks Inbox, then Facebook comments, one thread at a time.
 
 By Gambit Mutant, for [The AEGIS Alliance](https://theaegisalliance.com).
 
@@ -12,36 +14,52 @@ Version 1.1.8
 
 ## What it does
 
-- Works on facebook.com and Meta Business Suite
+- Works on facebook.com and Meta Business Suite, including Inbox → Facebook comments
+- Clicks a button only when its label says Invite
+- Skips a reaction that has a Follow button. Settings can allow Follow clicks instead. The default is skip
 - Scrolls the reactions list, and the page when needed, so later invites actually load
-- Clicks only Invite buttons that are in view
+- Clicks only when that button is on screen
 - Pauses for one minute after every 40 invites
+- Start Invite Scan can wait 20 minutes before the next post or comment thread. That is on by default
 - Frees photos and rows that have already scrolled past, so big posts do not get sluggish
 - Stops at the run limit you set. The default is 1000
 
 ## How to use it
 
 1. Install the extension in the browser you will use for inviting. See below.
-2. Open the Facebook post, or the same post in Meta Business Suite.
-3. Open the reactions list and leave that window open.
+2. Open the Facebook post, or Meta Business Suite.
+3. For one post, open that post’s reactions and leave the window open.
 4. Use the on-page panel:
-   - **Scan Current Post** invites from the post you are looking at.
-   - **Start Invite Scan** walks posts on the page.
-   - **Stop** ends the run.
+   - **Scan Current Post** invites from the reactions list you already opened. This is the one to use when you opened a post’s reactions yourself, including from a Business Suite comment.
+   - **Start Invite Scan** walks posts on a Facebook feed. In Meta Business Suite, open **Inbox**, then **Facebook comments**, and use this button. It opens each comment thread, finds that post’s reactions, invites, then moves on.
+   - **Stop** ends the run, including a 20 minute wait between posts.
    - **Settings** opens the options page.
    - **Max reactions this run** is the cap for this run. Leave it at 1000 unless you have a reason to change it.
-5. The toolbar button opens a small popup with today’s count, the all-time count, and Settings.
+5. The toolbar button opens a small popup with today’s count, the all-time count, and Settings. The GitHub icon opens this repository.
 
-You can leave the reactions window open between runs. The next run continues with the people still listed there.
+You can leave the reactions window open between runs. The next Scan Current Post continues with the people still listed there.
+
+## Settings
+
+Open Settings from the panel or the toolbar popup, change what you need, and click **Save settings**.
+
+- **Max reactions this run.** Default 1000.
+- **Min and max delay.** Default about 1.5 to 4.5 seconds between invites. Slower is fine. Faster is not.
+- **Daily invite limit.** A run also stops when today’s total reaches this. Default 2000.
+- **Max posts or comment threads per scan.** How many posts, or inbox threads, Start Invite Scan will open. Default 20.
+- **Wait 20 minutes before the next post.** On by default. Start Invite Scan only. After it finishes one post or one Facebook comment thread, it waits 20 minutes before the next so Meta is less likely to time out the invite feature. Scan Current Post does not wait. Stop cancels the wait.
+- **Follow buttons.** Default is **Skip reactions that have a Follow button**. The scan only clicks a button whose label says Invite, and it leaves the whole reaction alone when that row has Follow. The other choice, **Click Follow buttons too**, also clicks Follow. Following, Unfollow, and Invited are never clicked.
+- **Page URLs.** Optional. One Business Suite or Page URL per line, for your own notes on where you work.
 
 ## Stay within a safe pace
 
-Meta will limit the account if invites go out too quickly, or if the browser running them looks hidden.
+Meta can limit how often the invite feature can be used if the clicks are too fast, or if the browser running them looks hidden. Extensions like this one are allowed. Incorrect use is what causes the trouble.
 
-- Run the extension in a different browser from the one you normally use for Facebook. If you browse Facebook in your everyday browser, do the inviting in another one. That keeps a clicking limit from getting in the way of normal browsing.
+- Run the extension in a different browser from the one you normally use for Facebook. If you browse Facebook in your everyday browser, do the inviting in another one.
 - Keep at least 5–10% of that browser window visible on screen the whole time. Do not fully minimize it, and do not cover it completely.
-- Leave the pause between invites at the default, about 1.5 to 4.5 seconds. In Settings those fields are the minimum and maximum delay. Make them slower if you want. Do not make them faster.
-- For a large reaction list, invite about 1000 people, then wait 20 to 30 minutes before the next run. The extension already rests for one minute after every 40 invites. The longer break between runs is still worth taking.
+- Leave the pause between invites at the default, about 1.5 to 4.5 seconds. Make it slower if you want. Do not make it faster.
+- Leave the 20 minute wait between posts turned on when you use Start Invite Scan.
+- For a large reaction list, about 1000 invites in one run is enough. Wait 20 to 30 minutes before you start another run yourself. The extension already rests for one minute after every 40 invites.
 - The default run limit is 1000. That is the number to keep.
 
 ## Install
@@ -114,15 +132,14 @@ Donations are for The AEGIS Alliance’s project funding. A secondary purpose is
 - [AEGIS Shop](https://shop.theaegisalliance.com)
 - PayPal, Venmo, and Zelle: `aegisalliance`
 - Cash App: `$aegisalliance`
-
-Crypto accepted at Coinbase:
-
 - USDC: `0x39C7e115C4184f2E646D44E3681A87a22a93341B`
-- BTC: `3PCJwFfVytUCW2mfgUgKbjWmqsYvTzgCH1`
+- BTC: `0x876dA7d647C37FB7A8E94Fa287FefeB192dd49fc`
+- DOGE: `0x94ef8226B0409f382CAb78D2695FD3d7384f6bd6`
 - ETH: `0xcD8B620962e9ff4a098c4134f1C82fDf96236F87`
-- DOGE: `DAo22guf8pmNcF1V7FvuqrXTgy2khuPysB`
 - USDT: `0x4aF2eE05A313c8a8dd53EdA87DDA69F3E375c3B5`
+
+The crypto addresses above are `0x` addresses. Send each one on the network that address belongs to. Do not send legacy Bitcoin or Dogecoin network payments to these `0x` addresses.
 
 ## A note on Facebook’s terms
 
-Extensions like this one are allowed on Facebook. Using it incorrectly can still break Facebook’s terms or bring warnings and limits. Use a separate browser, keep that window partly visible, keep the default delay or slower, and take a 20 to 30 minute break after about 1000 invites.
+Extensions like this one are allowed on Facebook. Using it incorrectly can still cause a terms problem, a warning, or a limit. Use a separate browser, keep that window partly visible, keep the default delay or slower, leave the 20 minute wait on for Start Invite Scan, and keep a run around 1000 invites.

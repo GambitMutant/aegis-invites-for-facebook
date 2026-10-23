@@ -185,23 +185,61 @@
     return text;
   }
 
+  function actionText(el) {
+    if (!el) return "";
+    const copy = el.cloneNode(true);
+    copy.querySelectorAll("button, [role='button']").forEach((n) => n.remove());
+    return (copy.innerText || copy.textContent || "").trim().replace(/\s+/g, " ").toLowerCase();
+  }
+
+  function isFollowControl(el) {
+    if (!el || el.closest("#aegis-panel") || el.dataset.aegisDone) return false;
+    if (el.getAttribute("aria-disabled") === "true") return false;
+    const vis = actionText(el);
+    if (!vis || vis.length > 32) return false;
+    if (vis === "following" || vis.startsWith("following ") || vis.includes("unfollow")) return false;
+    return vis === "follow" || vis.startsWith("follow ");
+  }
+
   function isInviteControl(el) {
     if (!el || el.closest("#aegis-panel") || el.dataset.aegisDone) return false;
     if (el.getAttribute("aria-disabled") === "true") return false;
-    const low = buttonLabel(el).toLowerCase();
-    if (!low || low.length > 28) return false;
-    if (low.includes("invited") || low.includes("cancel") || low.includes("undo")) return false;
-    return low === "invite" || low.startsWith("invite ");
+    if (isFollowControl(el)) return false;
+    const vis = actionText(el);
+    if (vis.includes("invited") || vis.includes("cancel") || vis.includes("undo") || vis.includes("follow")) return false;
+    if (vis === "invite" || vis.startsWith("invite ")) return true;
+    const aria = (el.getAttribute("aria-label") || "").trim().toLowerCase();
+    if (vis) return false;
+    if (!aria || aria.length > 48 || aria.includes("follow") || aria.includes("invited")) return false;
+    return aria === "invite" || aria.startsWith("invite ");
   }
 
-  function findInviteButtons(root) {
+  function clickFollowToo() {
+    return currentSettings.followButtons === "click";
+  }
+
+  function rowHasFollow(row) {
+    if (!row) return false;
+    const buttons = row.querySelectorAll("button, [role='button']");
+    for (const b of buttons) {
+      if (isFollowControl(b)) return true;
+    }
+    return false;
+  }
+
+  function findActionButtons(root) {
     const scope = root && root.querySelectorAll ? root : document;
     const nodes = scope.querySelectorAll('[role="button"], button');
     const hits = [];
+    const allowFollow = clickFollowToo();
     for (const el of nodes) {
       const r = el.getBoundingClientRect();
       if (r.width < 2 || r.height < 2) continue;
-      if (!isInviteControl(el)) continue;
+      const invite = isInviteControl(el);
+      const follow = allowFollow && isFollowControl(el);
+      if (!invite && !follow) continue;
+      const row = reactionRow(el);
+      if (!allowFollow && rowHasFollow(row)) continue;
       hits.push(el);
     }
     return hits.filter((el) => !hits.some((other) => other !== el && el.contains(other)));
@@ -452,7 +490,7 @@
       }
       const dialog = findWorkRoot();
       const scroller = findReactionScroller(dialog);
-      const target = pickNext(findInviteButtons(dialog), scroller);
+      const target = pickNext(findActionButtons(dialog), scroller);
       if (!target) {
         const size = dialog.querySelectorAll('[role="listitem"], [role="row"]').length + (scroller ? scroller.scrollHeight : 0);
         if (size > lastSize + 8) stalled = 0;
@@ -505,6 +543,7 @@
         freeRow(row);
         continue;
       }
+      const followed = isFollowControl(target);
       try {
         target.dataset.aegisDone = "1";
         target.click();
@@ -518,7 +557,7 @@
       updateCount();
       const statsMsg = (globalThis.chrome || globalThis.browser)?.runtime?.sendMessage?.({ action: "updateStats", count: 1 });
       if (statsMsg && typeof statsMsg.catch === "function") statsMsg.catch(() => {});
-      log("Invite sent (" + invitesSent + ")", "success");
+      log((followed ? "Follow clicked (" : "Invite sent (") + invitesSent + ")", "success");
       await sleepWhileRunning(200);
       stripMedia(row || target);
       if (!isRunning || limitReason()) return;
@@ -553,6 +592,170 @@
     return null;
   }
 
+  function inBusinessInbox() {
+    return /business\.facebook\.com$/i.test(location.hostname) && /\/inbox/i.test(location.pathname);
+  }
+
+  function centerPane() {
+    return document.querySelector('[role="main"]') || document.body;
+  }
+
+  function inboxScroller() {
+    const bars = scrollables(document.body).filter((el) => {
+      const r = el.getBoundingClientRect();
+      return r.width > 80 && r.width < window.innerWidth * 0.5 && r.left < window.innerWidth * 0.2 && r.height > 140;
+    });
+    bars.sort((a, b) => b.clientHeight - a.clientHeight);
+    return bars[0] || null;
+  }
+
+  function threadKey(el) {
+    const link = el.matches("a[href]") ? el : el.querySelector("a[href]");
+    const href = link?.getAttribute("href") || "";
+    if (href && /selected_item_id|thread_id|comment_id|inbox/i.test(href)) return href.split("#")[0];
+    return (el.innerText || "").trim().replace(/\s+/g, " ").slice(0, 140);
+  }
+
+  function inboxThreads() {
+    const nodes = document.querySelectorAll('[role="row"], [role="listitem"], [role="option"], a[href*="selected_item_id"], a[href*="inbox"]');
+    const seen = new Set();
+    const out = [];
+    nodes.forEach((el) => {
+      if (el.closest("#aegis-panel")) return;
+      if (el.dataset.aegisThread) return;
+      const r = el.getBoundingClientRect();
+      if (r.width < 48 || r.height < 40 || r.height > 240) return;
+      if (r.left > window.innerWidth * 0.48 || r.right < 0) return;
+      if (r.bottom < 0 || r.top > window.innerHeight) return;
+      const text = (el.innerText || "").trim().replace(/\s+/g, " ");
+      if (!text || text.length < 2 || text.length > 500) return;
+      if (/^(inbox|facebook comments|instagram comments|messenger|all|done|spam|unread)$/i.test(text)) return;
+      const key = threadKey(el);
+      if (!key || seen.has(key)) return;
+      seen.add(key);
+      out.push(el);
+    });
+    return out.filter((el) => !out.some((other) => other !== el && other.contains(el)));
+  }
+
+  function scrollInboxList() {
+    const bar = inboxScroller();
+    if (!bar) return false;
+    const before = bar.scrollTop;
+    bar.scrollTop = Math.min(bar.scrollHeight - bar.clientHeight, before + Math.max(240, bar.clientHeight * 0.8));
+    bar.dispatchEvent(new Event("scroll", { bubbles: true }));
+    return bar.scrollTop > before + 2;
+  }
+
+  function findViewPost(scope) {
+    const root = scope && scope.querySelectorAll ? scope : document;
+    const nodes = root.querySelectorAll('a, button, [role="button"], [role="link"]');
+    for (const el of nodes) {
+      if (el.closest("#aegis-panel")) continue;
+      const low = actionText(el) || buttonLabel(el).toLowerCase();
+      if (!low || low.length > 40) continue;
+      if (low === "view post" || low === "see post" || low.startsWith("view post") || low.startsWith("see post")) return el;
+    }
+    return null;
+  }
+
+  async function openThreadReactions() {
+    const pane = centerPane();
+    for (let attempt = 0; attempt < 5 && isRunning; attempt++) {
+      const existing = document.querySelector('div[role="dialog"]');
+      if (existing && findActionButtons(existing).length) return existing;
+      const triggers = findReactionTriggers(pane);
+      if (triggers.length) {
+        triggers[0].click();
+        for (let i = 0; i < 12 && isRunning; i++) {
+          await sleep(200);
+          const dialog = document.querySelector('div[role="dialog"]');
+          if (dialog) return dialog;
+        }
+      }
+      if (attempt === 0) {
+        const view = findViewPost(pane);
+        if (view) {
+          view.click();
+          log("Opened the post from this comment", "info");
+          await sleepWhileRunning(800);
+          continue;
+        }
+      }
+      try {
+        pane.scrollTop += 320;
+      } catch (e) {
+        /* the pane may not scroll */
+      }
+      await sleepWhileRunning(350);
+    }
+    return null;
+  }
+
+  async function waitBetweenPosts() {
+    if (currentSettings.waitBetweenPosts === false) return;
+    const total = 20 * 60;
+    log("Waiting 20 minutes before the next post", "warn");
+    for (let s = total; s > 0 && isRunning; s--) {
+      const m = Math.floor(s / 60);
+      const r = s % 60;
+      updateStatus("Next post in " + m + "m " + String(r).padStart(2, "0") + "s");
+      await sleep(1000);
+    }
+    if (isRunning) updateStatus("Scanning posts…");
+  }
+
+  async function runInbox() {
+    updateStatus("Scanning Facebook comments…");
+    log("Inbox scan — Facebook comments", "info");
+    const seen = new Set();
+    let scanned = 0;
+    let idle = 0;
+    const cap = currentSettings.maxPostsPerPage || 20;
+    while (isRunning && scanned < cap && !limitReason()) {
+      const next = inboxThreads().find((el) => !seen.has(threadKey(el)));
+      if (!next) {
+        if (!scrollInboxList()) {
+          idle += 1;
+          if (idle >= 4) break;
+          await sleepWhileRunning(600);
+          continue;
+        }
+        idle = 0;
+        await sleepWhileRunning(500);
+        continue;
+      }
+      idle = 0;
+      const key = threadKey(next);
+      seen.add(key);
+      next.dataset.aegisThread = "1";
+      try {
+        next.scrollIntoView({ block: "center", behavior: "instant" });
+      } catch (e) {
+        next.scrollIntoView(true);
+      }
+      await sleepWhileRunning(250);
+      next.click();
+      scanned += 1;
+      log("Comment thread " + scanned, "info");
+      await sleepWhileRunning(900);
+      if (!isRunning || limitReason()) return scanned;
+      closeDialog();
+      const dialog = await openThreadReactions();
+      if (dialog && isRunning) {
+        await sleepWhileRunning(400);
+        await drainDialog();
+        closeDialog();
+      } else {
+        log("No reactions on this thread", "info");
+      }
+      const moreLeft = scanned < cap && isRunning && !limitReason();
+      if (moreLeft) await waitBetweenPosts();
+    }
+    if (!scanned) log("No Facebook comment threads found in the inbox list", "warn");
+    return scanned;
+  }
+
   async function runCurrentPost() {
     updateStatus("Scanning reactions…");
     const dialog = await ensureDialog(document);
@@ -562,6 +765,10 @@
   }
 
   async function runFeed() {
+    if (inBusinessInbox()) {
+      await runInbox();
+      return;
+    }
     updateStatus("Scanning posts…");
     const posts = Array.from(document.querySelectorAll('[role="article"], div[data-pagelet*="FeedUnit"]')).slice(0, currentSettings.maxPostsPerPage || 20);
     log("Posts found: " + posts.length, "info");
@@ -569,7 +776,8 @@
       await runCurrentPost();
       return;
     }
-    for (const post of posts) {
+    for (let i = 0; i < posts.length; i++) {
+      const post = posts[i];
       if (!isRunning || limitReason()) return;
       try {
         post.scrollIntoView({ block: "center", behavior: "instant" });
@@ -580,11 +788,12 @@
       closeDialog();
       await sleepWhileRunning(200);
       const dialog = await ensureDialog(post);
-      if (!dialog || !isRunning) continue;
-      await sleepWhileRunning(400);
-      await drainDialog();
-      closeDialog();
-      await sleepWhileRunning(200);
+      if (dialog && isRunning) {
+        await sleepWhileRunning(400);
+        await drainDialog();
+        closeDialog();
+      }
+      if (i < posts.length - 1 && isRunning && !limitReason()) await waitBetweenPosts();
     }
   }
 
@@ -605,6 +814,7 @@
     isRunning = true;
     setButtons(true);
     log(mode === "post" ? "Scanning this post" : "Full scan started", "info");
+    log(clickFollowToo() ? "Follow buttons will be clicked" : "Follow buttons will be skipped", "info");
     try {
       if (mode === "post") await runCurrentPost();
       else await runFeed();

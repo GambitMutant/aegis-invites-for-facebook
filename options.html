@@ -31,15 +31,23 @@
         <input type="number" id="dailyLimit" min="1" max="100000">
       </label>
       <p class="hint">A run also stops if today's total hits the daily limit. Raise this if it is lower than the run limit.</p>
-      <label>Max posts to scan per page
+      <label>Max posts or comment threads per scan
         <input type="number" id="maxPosts" min="1" max="100">
       </label>
+      <label class="checkbox"><input type="checkbox" id="waitBetweenPosts"> Wait 20 minutes before the next post</label>
+      <p class="hint">Start Invite Scan only. After each post or Facebook comment thread, it waits 20 minutes before opening the next one. That pause is there so Meta is less likely to time out the invite feature. Scan Current Post does not wait. Turn this off only if you accept that risk. Stop still ends the wait.</p>
     </section>
 
     <section class="card">
       <h2>Behavior</h2>
       <label class="checkbox"><input type="checkbox" id="scanComments"> Also scan commenters</label>
-      <label class="checkbox"><input type="checkbox" id="onlyNonFollowers"> Only invite non-followers</label>
+      <label>Follow buttons
+        <select id="followButtons">
+          <option value="skip">Skip reactions that have a Follow button</option>
+          <option value="click">Click Follow buttons too</option>
+        </select>
+      </label>
+      <p class="hint">Default is skip. A reaction row with a Follow button is not an Invite, so it is left alone. Invite buttons are still clicked. Choose the second option only if you also want Follow clicked.</p>
       <label class="checkbox"><input type="checkbox" id="randomize"> Randomize processing order</label>
       <label>Real-time scan interval (minutes)
         <input type="number" id="rtInterval" min="1" max="60">
