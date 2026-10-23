@@ -1,132 +1,101 @@
-# Terms of Service
+The AEGIS Alliance Source-Available License
+Version 1.0 — Effective October 23, 2026
 
-**The AEGIS Alliance — GitHub Repositories**
+This license is a source-available license. It is not an Open Source Initiative (OSI) open-source license. The Software is not open source under the Open Source Definition.
 
-**Effective Date:** October 23, 2026  
-**Last Updated:** October 23, 2026
+This license governs access to, use of, copying, forking, modification, distribution, and any other reuse of the source code, documentation, repositories, images, and related materials (the “Software”) made available by The AEGIS Alliance (“AEGIS,” “we,” “us,” or “our”).
 
-These Terms of Service (“Terms”) govern access to, use of, copying, forking, modification, distribution, and any other reuse of the source code, documentation, repositories, and related materials (collectively, the “Repositories” or “Software”) made available by **The AEGIS Alliance** (“AEGIS,” “we,” “us,” or “our”) on GitHub and elsewhere.
+By accessing, cloning, forking, copying, modifying, distributing, deploying, or otherwise using the Software, you agree to this license. If you do not agree, you must not use the Software and you must destroy any copies in your possession.
 
-By accessing, cloning, forking, copying, modifying, distributing, deploying, or otherwise using any of the Repositories, you (“you” or “User”) agree to be bound by these Terms. If you do not agree, you must immediately cease all use of the Repositories and destroy any copies in your possession.
+1. Ownership and copyright
 
-**Source-Available Notice:** These Repositories are **source-available**, not open source under the Open Source Initiative (OSI) definition. The fee-redirection and related restrictions in Section 5 limit what may be done with derivative works. This is fully permitted on GitHub. The Software may still be used alongside a standard permissive license file (such as MIT) for the portions of the code that are not subject to the fee-mechanism conditions, but the overall project should be described as source-available.
+The AEGIS Alliance is the original author, creator, and developer of the Software. All copyrights, trademarks, and other intellectual property rights remain exclusively with The AEGIS Alliance, except for third-party components included under their own licenses, which are identified where applicable.
 
-## 1. Ownership and Copyright
+This license does not transfer ownership. You receive only the limited, conditional license in Section 2.
 
-The AEGIS Alliance is the original author, creator, and developer of the Repositories. All copyrights, trademarks, and other intellectual property rights in the Repositories remain exclusively with The AEGIS Alliance, except for any third-party components that may be included under their own licenses (which are identified where applicable).
+2. License grant
 
-These Terms do not transfer any ownership rights to you. You receive only a limited, conditional license as described below.
+Subject to your full and continuous compliance with this license, The AEGIS Alliance grants you a non-exclusive, non-transferable, revocable, worldwide license to:
 
-## 2. License Grant
+- view, clone, and use the Software;
+- create forks and derivative works;
+- distribute copies and derivative works;
 
-Subject to your full and continuous compliance with these Terms (and any accompanying license file such as MIT that may cover portions of the code), The AEGIS Alliance grants you a non-exclusive, non-transferable, revocable, worldwide license to:
+provided that you strictly comply with Sections 3, 4, and 5. Any use that violates this license is unauthorized and prohibited. These conditions apply to every fork, copy, and derivative work.
 
-- View, clone, and use the Repositories;
-- Create forks and derivative works;
-- Distribute copies and derivative works;
+3. Attribution and linking
 
-**provided that** you strictly comply with all conditions in Sections 3, 4, and 5 below. Any use that violates these Terms is unauthorized and prohibited. These conditions apply equally to all forks, copies, and derivative works.
+You must give clear and prominent credit to The AEGIS Alliance as the original author, creator, and developer in all of the following, including but not limited to: forks (including GitHub forks), copies, derivative works, reuse, end-user deployments, documentation, README files, repository descriptions, project websites, documentation sites, and package metadata.
 
-## 3. Mandatory Attribution and Linking Requirements
-
-You must give clear and prominent credit to **The AEGIS Alliance** as the original author, creator, and developer in all of the following situations, including but not limited to:
-
-- Forks (including GitHub forks)
-- Copies
-- Derivative works
-- Reuse
-- End-user deployments and documentation
-- README files
-- Repository descriptions
-- Project websites, documentation sites, and package metadata
-
-**Required attribution** must include, at a minimum:
+Required attribution must include, at a minimum:
 
 1. The name “The AEGIS Alliance”
-2. A direct, functional hyperlink to the original official repository (or repositories) maintained by The AEGIS Alliance
-3. A statement that the work is based on or derived from the original AEGIS Alliance repositories
+2. A direct, working hyperlink to the original official repository maintained by The AEGIS Alliance
+3. A statement that the work is based on or derived from that original repository
 
-This attribution must appear in a location that is reasonably prominent (such as the top of the README and in the repository description) and cannot be buried in a changelog, footer, or secondary file that users are unlikely to see. These attribution obligations survive and apply to all forks and subsequent redistributions.
+The attribution must be reasonably prominent, such as at the top of the README and in the repository description. It must not be buried in a changelog, footer, or file users are unlikely to see. This duty applies to every later fork and redistribution.
 
-## 4. Preservation of Donation and Fee Information
+4. Donation and fee information
 
-You must preserve, intact and unmodified, all donation, funding, sponsorship, and fee-collection information that appears in the original Repositories. This includes, but is not limited to:
+You must preserve, intact and unmodified, all donation, funding, sponsorship, and fee-collection information that appears in the original Software. This includes, but is not limited to, donation addresses (cryptocurrency and otherwise), sponsorship links and buttons, funding-platform information, and the related explanatory text.
 
-- Donation addresses (cryptocurrency and otherwise)
-- Sponsorship links and buttons
-- Funding platform information
-- Related explanatory text and notices
+You must keep that information intact in README files, repository descriptions, documentation, and any other place it originally appears. This applies to forks, copies, derivative works, and any other reuse. Removing, altering, obscuring, replacing, or failing to carry that information forward is a material breach.
 
-You must keep this information intact and unmodified in:
+5. Fee destinations and keys
 
-- README files
-- Repository descriptions
-- Documentation
-- Any other locations where it originally appears
-
-This requirement applies to all forks, copies, derivative works, and any redistribution or reuse. Removing, altering, obscuring, replacing, or failing to carry forward donation or fee information is a material breach of these Terms.
-
-## 5. Restrictions on Fee Collection Mechanisms and API Keys
-
-The original Repositories may contain mechanisms (including cryptocurrency addresses, API keys, endpoints, configuration values, or related code) that direct fees, donations, tips, or other payments to destinations designated by The AEGIS Alliance.
-
-You are strictly prohibited from:
-
-- Changing, redirecting, substituting, or otherwise altering the destinations where fees, donations, tips, or other payments are collected (including but not limited to cryptocurrency wallets, payment processors, or other collection mechanisms);
-- Modifying, replacing, removing, decrypting, reverse-engineering, obfuscating, or otherwise interfering with any API keys, private keys, wallet addresses, endpoint configurations, or other mechanisms that determine or control where fees or donations are sent;
-- Creating, distributing, or deploying any fork, copy, or derivative work that directs fees or donations to any party other than those designated by The AEGIS Alliance in the original Repositories.
-
-These restrictions are material conditions of the license grant and apply to all copies, forks (including GitHub forks), modifications, and derivative works. Any attempt to alter the flow of funds or the associated technical mechanisms constitutes unauthorized use and a material breach of these Terms.
-
-## 6. Additional Prohibited Conduct
+The Software may contain mechanisms, including cryptocurrency addresses, API keys, endpoints, configuration values, or related code, that direct fees, donations, tips, or other payments to destinations designated by The AEGIS Alliance.
 
 You may not:
 
-- Use the Repositories in any manner that violates applicable law;
-- Remove or alter any copyright, trademark, attribution, or donation/fee notices;
-- Use The AEGIS Alliance’s name, logos, or trademarks in a way that suggests endorsement or affiliation without prior written permission;
-- Distribute the Software under terms that contradict or attempt to supersede these Terms;
-- Engage in any activity that could damage, disable, or impair the Repositories or The AEGIS Alliance’s systems.
+- change, redirect, substitute, or otherwise alter where fees, donations, tips, or other payments are collected, including cryptocurrency wallets, payment processors, or other collection mechanisms;
+- modify, replace, remove, decrypt, reverse-engineer, obfuscate, or otherwise interfere with any API keys, private keys, wallet addresses, endpoint configurations, or other mechanisms that determine or control where fees or donations are sent;
+- create, distribute, or deploy any fork, copy, or derivative work that directs fees or donations to anyone other than the destinations designated by The AEGIS Alliance in the original Software.
 
-## 7. Termination
+These restrictions are material conditions of the license. They apply to every copy, fork (including a GitHub fork), modification, and derivative work. Changing the flow of funds, or the technical mechanism that controls it, is unauthorized use and a material breach.
 
-These Terms and the license granted hereunder automatically terminate if you breach any provision. Upon termination, you must immediately cease all use of the Repositories and destroy all copies (including forks and derivative works) in your possession or control.
+6. Other prohibited conduct
 
-The AEGIS Alliance reserves the right to pursue any available legal remedies for unauthorized use.
+You may not:
 
-## 8. Disclaimer of Warranties
+- use the Software in violation of applicable law;
+- remove or alter copyright, trademark, attribution, or donation or fee notices;
+- use The AEGIS Alliance’s name, logos, or trademarks to suggest endorsement or affiliation without prior written permission;
+- distribute the Software under terms that contradict or try to replace this license;
+- damage, disable, or impair the Software or The AEGIS Alliance’s systems.
 
-THE REPOSITORIES ARE PROVIDED “AS IS” AND “AS AVAILABLE,” WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND NON-INFRINGEMENT. THE AEGIS ALLIANCE DOES NOT WARRANT THAT THE SOFTWARE WILL BE ERROR-FREE, SECURE, OR UNINTERRUPTED.
+7. Termination
 
-## 9. Limitation of Liability
+This license ends automatically if you breach it. You must then stop all use and destroy every copy, including forks and derivative works, in your possession or control. The AEGIS Alliance may pursue any available remedy for unauthorized use.
 
-TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, THE AEGIS ALLIANCE SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, OR ANY LOSS OF PROFITS, REVENUE, DATA, OR USE, ARISING OUT OF OR RELATED TO THESE TERMS OR THE USE OF THE REPOSITORIES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+8. Disclaimer of warranties
 
-## 10. Indemnification
+THE SOFTWARE IS PROVIDED “AS IS” AND “AS AVAILABLE,” WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND NON-INFRINGEMENT. THE AEGIS ALLIANCE DOES NOT WARRANT THAT THE SOFTWARE WILL BE ERROR-FREE, SECURE, OR UNINTERRUPTED.
 
-You agree to indemnify, defend, and hold harmless The AEGIS Alliance and its officers, directors, employees, and agents from and against any claims, damages, losses, liabilities, costs, and expenses (including reasonable attorneys’ fees) arising out of your use of the Repositories or your violation of these Terms.
+9. Limitation of liability
 
-## 11. Governing Law and Venue
+TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE AEGIS ALLIANCE SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, OR ANY LOSS OF PROFITS, REVENUE, DATA, OR USE, ARISING OUT OF THIS LICENSE OR THE SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY.
 
-These Terms shall be governed by and construed in accordance with the laws of the State of California, including without limitation the California Constitution, the California Code of Civil Procedure, the California Penal Code, the California Family Code, and the California Rules of Court, without regard to conflict-of-law principles.
+10. Indemnification
 
-Any dispute, claim, or action arising out of or relating to these Terms or the Repositories shall be brought exclusively in the Superior Court of California, County of San Bernardino, which operates under the authority of the California judicial branch. Venue shall be proper at the San Bernardino Justice Center, located at 247 W 3rd St, San Bernardino, CA 92415, or any other division of the Superior Court of California, County of San Bernardino that has jurisdiction.
+You will indemnify, defend, and hold harmless The AEGIS Alliance and its officers, directors, employees, and agents from claims, damages, losses, liabilities, costs, and expenses (including reasonable attorneys’ fees) arising out of your use of the Software or your violation of this license.
 
-## 12. Changes to These Terms
+11. Governing law and venue
 
-The AEGIS Alliance may update these Terms from time to time. The most current version will be posted in the official Repositories. Continued use of the Repositories after changes become effective constitutes acceptance of the revised Terms.
+This license is governed by the laws of the State of California, including the California Constitution, the California Code of Civil Procedure, the California Penal Code, the California Family Code, and the California Rules of Court, without regard to conflict-of-law principles.
 
-## 13. Contact
+Any dispute arising out of this license or the Software shall be brought exclusively in the Superior Court of California, County of San Bernardino. Venue is proper at the San Bernardino Justice Center, 247 W 3rd St, San Bernardino, CA 92415, or any other division of that court that has jurisdiction.
 
-For questions regarding these Terms, please contact:
+12. Changes
 
-**The AEGIS Alliance**  
-15180 Dandelion Ln.  
-Fontana, CA 92336  
+The AEGIS Alliance may update this license. The current version will be posted in the official repositories. Continued use after a change takes effect is acceptance of the revised license.
+
+13. Contact
+
+The AEGIS Alliance
+15180 Dandelion Ln.
+Fontana, CA 92336
 United States
 
----
+Unauthorized use of the Software in violation of this license is strictly prohibited.
 
-**Unauthorized use of the Repositories in violation of these Terms is strictly prohibited.**
-
-© The AEGIS Alliance. All rights reserved.
+Copyright The AEGIS Alliance. All rights reserved.
