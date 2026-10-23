@@ -10,7 +10,7 @@ By Gambit Mutant, for [The AEGIS Alliance](https://theaegisalliance.com).
 - [AEGIS Shop](https://shop.theaegisalliance.com)
 - [GitHub](https://github.com/GambitMutant/aegis-invites-for-facebook)
 
-Version 1.1.8
+Version 1.1.9
 
 ## What it does
 
@@ -64,7 +64,7 @@ Meta can limit how often the invite feature can be used if the clicks are too fa
 
 ## Install
 
-Use the [v1.1.8 release](https://github.com/GambitMutant/aegis-invites-for-facebook/releases/tag/v1.1.8).
+Use the [v1.1.9 release](https://github.com/GambitMutant/aegis-invites-for-facebook/releases/tag/v1.1.9).
 
 - Chromium browsers use `aegis-invites-facebook.zip`
 - Firefox uses `aegis-invites-firefox.xpi`
@@ -132,13 +132,14 @@ Donations are for The AEGIS Alliance’s project funding. A secondary purpose is
 - [AEGIS Shop](https://shop.theaegisalliance.com)
 - PayPal, Venmo, and Zelle: `aegisalliance`
 - Cash App: `$aegisalliance`
-- USDC: `0x39C7e115C4184f2E646D44E3681A87a22a93341B`
-- BTC: `0x876dA7d647C37FB7A8E94Fa287FefeB192dd49fc`
-- DOGE: `0x94ef8226B0409f382CAb78D2695FD3d7384f6bd6`
-- ETH: `0xcD8B620962e9ff4a098c4134f1C82fDf96236F87`
-- USDT: `0x4aF2eE05A313c8a8dd53EdA87DDA69F3E375c3B5`
 
-The crypto addresses above are `0x` addresses. Send each one on the network that address belongs to. Do not send legacy Bitcoin or Dogecoin network payments to these `0x` addresses.
+Crypto accepted at Coinbase:
+
+- USDC: `0x39C7e115C4184f2E646D44E3681A87a22a93341B`
+- BTC: `3PCJwFfVytUCW2mfgUgKbjWmqsYvTzgCH1`
+- ETH: `0xcD8B620962e9ff4a098c4134f1C82fDf96236F87`
+- DOGE: `DAo22guf8pmNcF1V7FvuqrXTgy2khuPysB`
+- USDT: `0x4aF2eE05A313c8a8dd53EdA87DDA69F3E375c3B5`
 
 ## A note on Facebook’s terms
 
