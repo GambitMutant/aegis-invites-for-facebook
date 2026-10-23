@@ -19,7 +19,7 @@ By Gambit Mutant, for [The AEGIS Alliance](https://theaegisalliance.com).
 - [AEGIS Shop](https://shop.theaegisalliance.com)
 - [GitHub](https://github.com/GambitMutant/aegis-invites-for-facebook)
 
-Version 1.1.14
+Version 1.1.15
 
 ## What it does
 
@@ -38,7 +38,7 @@ Version 1.1.14
 
 1. Install the extension in the browser you will use for inviting. See below.
 2. Open the Facebook post, or Meta Business Suite.
-3. You do not have to open the reactions list yourself. Scan Current Post and Start Invite Scan both open it.
+3. You do not have to open the reactions list yourself. Both buttons scroll the post, or the Business Suite comment thread, until the reaction count is on screen, then open it. That works when the count is already visible and when it is not.
 4. Use the on-page panel:
    - **Scan Current Post** opens the reactions on the post you are looking at, then invites. On Facebook that is the post on screen. In Meta Business Suite it is the post in the comment thread you have open.
    - **Start Invite Scan** walks posts on a Facebook feed and opens each post’s reactions. In Meta Business Suite, open **Inbox**, then **Facebook comments**. It opens each comment thread, opens that post’s reactions, then invites.
@@ -75,7 +75,7 @@ Meta can limit how often the invite feature can be used if the clicks are too fa
 
 ## Install
 
-Use the [v1.1.14 release](https://github.com/GambitMutant/aegis-invites-for-facebook/releases/tag/v1.1.14).
+Use the [v1.1.15 release](https://github.com/GambitMutant/aegis-invites-for-facebook/releases/tag/v1.1.15).
 
 - Chromium browsers use `aegis-invites-facebook.zip`
 - Firefox uses `aegis-invites-firefox.xpi`

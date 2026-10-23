@@ -303,57 +303,96 @@
     el.click();
   }
 
+  function layerName(el) {
+    const aria = el.getAttribute("aria-label") || "";
+    let extra = "";
+    (el.getAttribute("aria-labelledby") || "").split(/\s+/).forEach((id) => {
+      if (!id) return;
+      const node = document.getElementById(id);
+      if (node) extra += " " + (node.innerText || node.textContent || "");
+    });
+    return (aria + " " + extra).trim().replace(/\s+/g, " ");
+  }
+
+  function isPlainAction(name) {
+    const low = (name || "").trim().toLowerCase();
+    return /^(like|love|care|haha|wow|sad|angry|react|reply|comment|share|send|message|follow|hide comment|hide|more|options)$/.test(low);
+  }
+
+  function faceCount(el) {
+    if (!el || !el.querySelectorAll) return 0;
+    let n = 0;
+    el.querySelectorAll('img[alt], svg[aria-label], [role="img"][aria-label]').forEach((node) => {
+      const alt = (node.getAttribute("alt") || node.getAttribute("aria-label") || "").toLowerCase();
+      if (/^(like|love|care|haha|wow|sad|angry)\b/.test(alt)) n += 1;
+    });
+    return n;
+  }
+
   function isReactionsDialog(dialog) {
-    if (!dialog || dialog.closest("#aegis-panel")) return false;
-    const label = ((dialog.getAttribute("aria-label") || "") + " " + (dialog.getAttribute("aria-labelledby") ? "" : "")).toLowerCase();
-    if (/react/.test(label)) return true;
+    if (!dialog || dialog.closest("#aegis-panel") || dialog.getAttribute("role") === "menu") return false;
     if (findActionButtons(dialog).length) return true;
+    const label = (layerName(dialog) + " " + (dialog.innerText || "").slice(0, 280)).toLowerCase();
+    const rows = dialog.querySelectorAll('[role="listitem"], [role="row"]').length;
+    if (rows >= 2 && /react|invite|\ball\b|like|love/.test(label)) return true;
     const names = ["all", "like", "love", "care", "haha", "wow", "sad", "angry"];
     let tabs = 0;
     dialog.querySelectorAll('[role="tab"]').forEach((tab) => {
-      const name = actionText(tab);
-      if (names.indexOf(name) !== -1) tabs += 1;
+      if (names.indexOf(actionText(tab)) !== -1) tabs += 1;
     });
     return tabs >= 2;
   }
 
   function reactionScore(el) {
     if (!el || el.closest("#aegis-panel")) return 0;
-    const aria = el.getAttribute("aria-label") || "";
+    const name = layerName(el);
     const text = (el.innerText || "").trim().replace(/\s+/g, " ");
-    const blob = (aria + " " + text).toLowerCase();
-    if (/see who reacted|people who reacted|person reacted|all reactions|\breactions?\b|\breacted\b/.test(blob)) return 8;
-    if (el.matches && el.matches("img") && /^(like|love|care|haha|wow|sad|angry)\b/i.test(el.getAttribute("alt") || "")) return 5;
-    if (/\b(like|love|care|haha|wow|sad|angry)\b/.test(blob) && /\d/.test(blob) && blob.length < 90) return 6;
+    const blob = (name + " " + text).toLowerCase();
+    if (isPlainAction(name) || isPlainAction(text)) return 0;
+    if (/see who reacted|people who reacted|person reacted|all reactions|\breactions?\b|\breacted\b/.test(blob)) return 9;
     const href = el.getAttribute("href") || "";
-    if (/\/reactions|reaction_type/i.test(href)) return 8;
-    const imgs = el.querySelectorAll ? el.querySelectorAll("img[alt]") : [];
-    let faces = 0;
-    imgs.forEach((img) => {
-      const alt = (img.getAttribute("alt") || "").toLowerCase();
-      if (/^(like|love|care|haha|wow|sad|angry)\b/.test(alt)) faces += 1;
-    });
-    if (!faces) return 0;
-    if (/^[\d][\d,.\s]*[kmb]?$/i.test(text) || (text.length > 0 && text.length <= 20)) return 4 + faces;
+    if (/\/reactions|reaction_type/i.test(href)) return 9;
+    if (/\b(like|love|care|haha|wow|sad|angry)\b/.test(blob) && /\d/.test(blob) && blob.length < 100) return 8;
+    const faces = faceCount(el);
+    const icons = el.querySelectorAll ? el.querySelectorAll("img, svg").length : 0;
+    const numeric = /^[\d][\d,.\s]*[kmb]?$/i.test(text);
+    if (faces >= 1 && (numeric || /\d/.test(name))) return 7;
+    if (numeric && icons >= 2) return 7;
+    if (numeric && icons === 1 && el.matches('a, button, [role="button"], [role="link"]')) return 4;
     return 0;
+  }
+
+  function clickableReaction(el) {
+    let best = el;
+    let node = el;
+    for (let i = 0; i < 6 && node && node !== document.body; i++) {
+      const r = node.getBoundingClientRect();
+      if (r.width < 8 || r.height < 8) break;
+      if (r.height > 88 || r.width > 460) break;
+      best = node;
+      if (node.matches('a, button, [role="button"], [role="link"]')) return node;
+      node = node.parentElement;
+    }
+    return best;
   }
 
   function findReactionTriggers(scope) {
     const root = scope && scope.querySelectorAll ? scope : document;
-    const nodes = root.querySelectorAll('a, button, [role="button"], [role="link"], [aria-label*="react" i], [aria-label*="Like" i], [aria-label*="Love" i], [aria-label*="Care" i], img[alt="Like" i], img[alt="Love" i], img[alt="Care" i], img[alt="Haha" i], img[alt="Wow" i], img[alt="Sad" i], img[alt="Angry" i]');
+    const nodes = root.querySelectorAll('a, button, [role="button"], [role="link"], [aria-label*="react" i], [aria-label*="Like:" i], [aria-label*="Love:" i], img[alt], svg[aria-label]');
     const hits = [];
     const seen = new Set();
     nodes.forEach((el) => {
       if (el.closest("#aegis-panel")) return;
       const score = reactionScore(el);
       if (!score) return;
-      const click = el.closest('a, button, [role="button"], [role="link"]') || el;
-      if (!click || seen.has(click) || click.closest("#aegis-panel")) return;
+      const click = clickableReaction(el);
+      if (!click || seen.has(click) || click.closest("#aegis-panel") || click.dataset.aegisOpenTry) return;
+      if (isPlainAction(layerName(click)) || isPlainAction((click.innerText || "").trim())) return;
       const r = click.getBoundingClientRect();
-      if (r.width < 8 || r.height < 8 || r.height > 96) return;
-      if (r.width > 460 && score < 8) return;
+      if (r.width < 8 || r.height < 8 || r.height > 88 || r.width > 460) return;
       seen.add(click);
-      hits.push({ el: click, score: score, area: r.width * r.height });
+      const visible = r.bottom > 40 && r.top < window.innerHeight - 40 && r.right > 0 && r.left < window.innerWidth;
+      hits.push({ el: click, score: score + (visible ? 1 : 0), area: Math.max(1, r.width * r.height) });
     });
     hits.sort((a, b) => b.score - a.score || a.area - b.area);
     return hits.map((hit) => hit.el);
@@ -666,50 +705,100 @@
     if (btn) btn.click();
   }
 
+  function scrollParent(el) {
+    const start = el && el.nodeType === 1 ? el : null;
+    let node = start;
+    while (node && node !== document.documentElement) {
+      const oy = getComputedStyle(node).overflowY;
+      if ((oy === "auto" || oy === "scroll" || oy === "overlay") && node.scrollHeight > node.clientHeight + 24) return node;
+      node = node.parentElement;
+    }
+    return document.scrollingElement || document.documentElement;
+  }
+
+  function threadPane() {
+    const bars = scrollables(document.body).filter((el) => {
+      const r = el.getBoundingClientRect();
+      const mid = r.left + r.width / 2;
+      return r.height > 160 && r.width > 180 && mid > window.innerWidth * 0.25 && mid < window.innerWidth * 0.8;
+    });
+    bars.sort((a, b) => b.clientHeight - a.clientHeight);
+    return bars[0] || null;
+  }
+
+  async function waitForReactions() {
+    for (let i = 0; i < 16 && isRunning; i++) {
+      await sleep(250);
+      const layers = document.querySelectorAll('[role="dialog"], [aria-modal="true"]');
+      for (const layer of layers) {
+        if (isReactionsDialog(layer)) return layer;
+      }
+    }
+    return null;
+  }
+
+  function pressReaction(el) {
+    const parent = scrollParent(el);
+    reveal(el, parent);
+    const r = el.getBoundingClientRect();
+    press(el);
+    const x = r.left + r.width / 2;
+    const y = r.top + r.height / 2;
+    if (x < 0 || y < 0 || x > window.innerWidth || y > window.innerHeight) return;
+    const hit = document.elementFromPoint(x, y);
+    if (!hit || hit.closest("#aegis-panel")) return;
+    if (hit === el || el.contains(hit) || hit.contains(el)) {
+      const inner = hit.closest('[role="button"], a, button') || hit;
+      if (inner !== el) press(inner);
+    }
+  }
+
   async function openReactions(scope) {
-    const already = Array.from(document.querySelectorAll('div[role="dialog"]')).find(isReactionsDialog);
+    const already = Array.from(document.querySelectorAll('[role="dialog"], [aria-modal="true"]')).find(isReactionsDialog);
     if (already) return already;
     log("Opening post reactions", "info");
-    const root = scope && scope.querySelectorAll ? scope : document;
-    for (let attempt = 0; attempt < 6 && isRunning; attempt++) {
-      let triggers = findReactionTriggers(root);
-      if (!triggers.length && root !== document) triggers = findReactionTriggers(document);
-      if (triggers.length) {
-        const trigger = triggers[0];
-        try {
-          trigger.scrollIntoView({ block: "center", behavior: "instant" });
-        } catch (e) {
-          trigger.scrollIntoView(true);
-        }
-        await sleepWhileRunning(250);
-        const before = new Set(document.querySelectorAll('div[role="dialog"]'));
-        press(trigger);
-        for (let i = 0; i < 16 && isRunning; i++) {
-          await sleep(250);
-          const dialogs = Array.from(document.querySelectorAll('div[role="dialog"]'));
-          const known = dialogs.find(isReactionsDialog);
-          if (known) {
+    const panes = [];
+    const thread = threadPane();
+    if (scope && scope.querySelectorAll && scope !== document) panes.push(scope);
+    if (thread && panes.indexOf(thread) === -1) panes.push(thread);
+    panes.push(document);
+
+    for (const pane of panes) {
+      if (!isRunning) return null;
+      const bar = pane === document ? scrollParent(document.body) : scrollParent(pane);
+      if (bar && bar.scrollTop > 0) bar.scrollTop = 0;
+      await sleepWhileRunning(200);
+      let viewed = false;
+      for (let step = 0; step < 8 && isRunning; step++) {
+        const triggers = findReactionTriggers(pane === document ? document : pane);
+        if (triggers.length) {
+          const trigger = triggers[0];
+          trigger.dataset.aegisOpenTry = "1";
+          log(trigger.getBoundingClientRect().top > 0 && trigger.getBoundingClientRect().bottom < window.innerHeight ? "Clicking the reaction count" : "Scrolling to the reaction count", "info");
+          pressReaction(trigger);
+          const opened = await waitForReactions();
+          if (opened) {
             log("Reactions opened", "info");
-            return known;
-          }
-          const fresh = dialogs.find((dialog) => !before.has(dialog) && dialog.querySelector('[role="list"], [role="listitem"], [role="row"]'));
-          if (fresh) {
-            log("Reactions opened", "info");
-            return fresh;
+            return opened;
           }
         }
+        if (!viewed) {
+          viewed = true;
+          const view = findViewPost(pane === document ? document : pane);
+          if (view) {
+            press(view);
+            log("Opened the post", "info");
+            await sleepWhileRunning(900);
+            continue;
+          }
+        }
+        if (!bar) break;
+        const before = bar.scrollTop;
+        bar.scrollTop = Math.min(bar.scrollHeight, before + Math.max(240, Math.round(bar.clientHeight * 0.75)));
+        bar.dispatchEvent(new Event("scroll", { bubbles: true }));
+        if (bar.scrollTop <= before + 2) break;
+        await sleepWhileRunning(350);
       }
-      const view = findViewPost(root) || (root !== document ? findViewPost(document) : null);
-      if (view && attempt < 2) {
-        press(view);
-        log("Opened the post", "info");
-        await sleepWhileRunning(1000);
-        continue;
-      }
-      if (findActionButtons(root).length) return root === document ? document.body : root;
-      if (root !== document && root.scrollHeight > root.clientHeight + 20) root.scrollTop += 420;
-      else window.scrollBy(0, 520);
-      await sleepWhileRunning(400);
     }
     log("Could not open post reactions", "warn");
     return null;
