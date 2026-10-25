@@ -19,7 +19,7 @@ By Gambit Mutant, for [The AEGIS Alliance](https://theaegisalliance.com).
 - [AEGIS Shop](https://shop.theaegisalliance.com)
 - [GitHub](https://github.com/GambitMutant/aegis-invites-for-facebook)
 
-Version 1.1.16
+Version 1.1.17
 
 ## What it does
 
@@ -59,7 +59,7 @@ Open Settings from the panel or the toolbar popup, change what you need, and cli
 - **Daily invite limit.** A run also stops when today’s total reaches this. Default 2000.
 - **Max posts or comment threads per scan.** How many posts, or inbox threads, Start Invite Scan will open. Default 20.
 - **Wait 20 minutes before the next post.** On by default. Start Invite Scan only. After it finishes one post or one Facebook comment thread, it waits 20 minutes before the next so Meta is less likely to time out the invite feature. Scan Current Post does not wait. Stop cancels the wait.
-- **Follow buttons.** Default is **Skip reactions that have a Follow button**. The scan only clicks a button whose label says Invite, and it leaves the whole reaction alone when that row has Follow. The other choice, **Click Follow buttons too**, also clicks Follow. Following, Unfollow, and Invited are never clicked.
+- **Follow buttons.** Default is **Skip reactions that have a Follow button**. A button whose visible word is Follow is never clicked while this is set to skip, even if a hidden label says Invite. The whole reaction is left alone when that row has Follow. Invite buttons on other rows are still clicked. The other choice, **Click Follow buttons too**, also clicks Follow. Following, Unfollow, and Invited are never clicked.
 - **Page URLs.** Optional. One Business Suite or Page URL per line, for your own notes on where you work.
 
 ## Stay within a safe pace
@@ -75,7 +75,7 @@ Meta can limit how often the invite feature can be used if the clicks are too fa
 
 ## Install
 
-Use the [v1.1.16 release](https://github.com/GambitMutant/aegis-invites-for-facebook/releases/tag/v1.1.16).
+Use the [v1.1.17 release](https://github.com/GambitMutant/aegis-invites-for-facebook/releases/tag/v1.1.17).
 
 - Chromium browsers use `aegis-invites-facebook.zip`
 - Firefox uses `aegis-invites-firefox.xpi`

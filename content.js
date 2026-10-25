@@ -226,26 +226,50 @@
     return (copy.innerText || copy.textContent || "").trim().replace(/\s+/g, " ").toLowerCase();
   }
 
+  function ownVisible(el) {
+    if (!el) return "";
+    const copy = el.cloneNode(true);
+    copy.querySelectorAll("button, [role='button']").forEach((n) => n.remove());
+    return (copy.textContent || "").replace(/\s+/g, " ").trim().toLowerCase();
+  }
+
+  function isFollowLabel(s) {
+    if (!s) return false;
+    if (s.includes("unfollow") || s === "following" || s.startsWith("following ") || s.startsWith("following,")) return false;
+    if (s.includes("invite")) return false;
+    return s === "follow" || s.startsWith("follow ") || s.startsWith("follow,") || /^follow\b/.test(s);
+  }
+
+  function isInviteLabel(s) {
+    if (!s) return false;
+    if (s.includes("invited") || s.includes("cancel") || s.includes("undo") || s.includes("follow")) return false;
+    return s === "invite" || s.startsWith("invite ");
+  }
+
   function isFollowControl(el) {
     if (!el || el.closest("#aegis-panel") || el.dataset.aegisDone) return false;
     if (el.getAttribute("aria-disabled") === "true") return false;
-    const vis = actionText(el);
-    if (!vis || vis.length > 32) return false;
-    if (vis === "following" || vis.startsWith("following ") || vis.includes("unfollow")) return false;
-    return vis === "follow" || vis.startsWith("follow ");
+    const vis = ownVisible(el);
+    const aria = (el.getAttribute("aria-label") || "").replace(/\s+/g, " ").trim().toLowerCase();
+    if ((vis && vis.length <= 48 && isFollowLabel(vis)) || (aria && aria.length <= 80 && isFollowLabel(aria))) return true;
+    const raw = (el.textContent || "").replace(/\s+/g, " ").trim().toLowerCase();
+    return !isInviteLabel(vis) && raw.length > 0 && raw.length <= 48 && isFollowLabel(raw);
   }
 
   function isInviteControl(el) {
     if (!el || el.closest("#aegis-panel") || el.dataset.aegisDone) return false;
     if (el.getAttribute("aria-disabled") === "true") return false;
     if (isFollowControl(el)) return false;
-    const vis = actionText(el);
-    if (vis.includes("invited") || vis.includes("cancel") || vis.includes("undo") || vis.includes("follow")) return false;
-    if (vis === "invite" || vis.startsWith("invite ")) return true;
-    const aria = (el.getAttribute("aria-label") || "").trim().toLowerCase();
-    if (vis) return false;
-    if (!aria || aria.length > 48 || aria.includes("follow") || aria.includes("invited")) return false;
-    return aria === "invite" || aria.startsWith("invite ");
+    const vis = ownVisible(el);
+    const aria = (el.getAttribute("aria-label") || "").replace(/\s+/g, " ").trim().toLowerCase();
+    const raw = (el.textContent || "").replace(/\s+/g, " ").trim().toLowerCase();
+    if (/\bfollow\b/.test(raw) || /\bfollow\b/.test(aria)) {
+      if (!(vis === "invite" || vis.startsWith("invite "))) return false;
+    }
+    if (vis) return isInviteLabel(vis);
+    if (raw) return false;
+    if (!aria || aria.length > 80) return false;
+    return isInviteLabel(aria);
   }
 
   function clickFollowToo() {
@@ -700,6 +724,15 @@
         continue;
       }
       const followed = isFollowControl(target);
+      if (followed && !clickFollowToo()) {
+        target.dataset.aegisDone = "1";
+        log("Skipped Follow", "info");
+        continue;
+      }
+      if (!followed && !isInviteControl(target)) {
+        target.dataset.aegisDone = "1";
+        continue;
+      }
       try {
         target.dataset.aegisDone = "1";
         target.click();
