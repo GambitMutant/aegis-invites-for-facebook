@@ -5,7 +5,8 @@
 **The AEGIS Alliance** is the original author, creator, and developer of this repository.
 
 - Original repository: https://github.com/GambitMutant/aegis-invites-for-facebook
-- Forks, copies, derivative works, and any other reuse must credit **The AEGIS Alliance**, link to that original repository in the README and the repository description, and keep the donation information in this repository intact and unmodified.
+- Forks, copies, derivative works, and any other reuse must credit **The AEGIS Alliance**, link to that original repository in the README and the repository description, and keep the donation and fee information in this repository intact and unmodified.
+- Where a fee is collected, including the disclosed cryptocurrency fee, the destination of that fee must not be changed, and the keys or addresses that send it must not be modified or decrypted.
 - Use is subject to the [AEGIS Source-Available License](LICENSE) (also in [TERMS.md](TERMS.md)). This project is **source-available**, not open source under the Open Source Initiative definition. Unauthorized use that violates the license is not allowed.
 
 Invite people who reacted to your Facebook Page posts. The on-page panel scrolls the reaction list, clicks buttons that say Invite, skips Follow unless you turn that on, pauses as it goes, and clears rows it has already passed so a large post stays responsive.
@@ -18,12 +19,12 @@ By Gambit Mutant, for [The AEGIS Alliance](https://theaegisalliance.com).
 - [AEGIS Shop](https://shop.theaegisalliance.com)
 - [GitHub](https://github.com/GambitMutant/aegis-invites-for-facebook)
 
-Version 1.1.17
+Version 1.1.18
 
 ## What it does
 
 - Opens the post’s reactions by itself on Facebook and in Meta Business Suite Inbox → Facebook comments, before the first invite
-- Clicks a button only when its label says Invite
+- Clicks a button only when its label says Invite. Add Friend is never clicked, including on a personal profile
 - Skips a reaction that has a Follow button. Settings can allow Follow clicks instead. The default is skip
 - Scrolls the reactions list, and the page when needed, so later invites actually load
 - Clicks only when that button is on screen
@@ -74,7 +75,7 @@ Meta can limit how often the invite feature can be used if the clicks are too fa
 
 ## Install
 
-Use the [v1.1.17 release](https://github.com/GambitMutant/aegis-invites-for-facebook/releases/tag/v1.1.17).
+Use the [v1.1.18 release](https://github.com/GambitMutant/aegis-invites-for-facebook/releases/tag/v1.1.18).
 
 - Chromium browsers use `aegis-invites-facebook.zip`
 - Firefox uses `aegis-invites-firefox.xpi`

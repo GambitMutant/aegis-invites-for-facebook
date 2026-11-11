@@ -240,9 +240,25 @@
     return s === "follow" || s.startsWith("follow ") || s.startsWith("follow,") || /^follow\b/.test(s);
   }
 
+  function isAddFriendLabel(s) {
+    if (!s) return false;
+    if (s.includes("invite")) return false;
+    return s === "add friend" || s.startsWith("add friend") || s === "add as friend" || /^add friend\b/.test(s);
+  }
+
+  function isAddFriendControl(el) {
+    if (!el || el.closest("#aegis-panel")) return false;
+    const vis = ownVisible(el);
+    const aria = (el.getAttribute("aria-label") || "").replace(/\s+/g, " ").trim().toLowerCase();
+    const raw = (el.textContent || "").replace(/\s+/g, " ").trim().toLowerCase();
+    if ((vis && vis.length <= 48 && isAddFriendLabel(vis)) || (aria && aria.length <= 80 && isAddFriendLabel(aria))) return true;
+    return raw.length > 0 && raw.length <= 48 && isAddFriendLabel(raw);
+  }
+
   function isInviteLabel(s) {
     if (!s) return false;
     if (s.includes("invited") || s.includes("cancel") || s.includes("undo") || s.includes("follow")) return false;
+    if (/\badd friend\b|\badd as friend\b|friend request/.test(s)) return false;
     return s === "invite" || s.startsWith("invite ");
   }
 
@@ -259,10 +275,13 @@
   function isInviteControl(el) {
     if (!el || el.closest("#aegis-panel") || el.dataset.aegisDone) return false;
     if (el.getAttribute("aria-disabled") === "true") return false;
-    if (isFollowControl(el)) return false;
+    if (isFollowControl(el) || isAddFriendControl(el)) return false;
     const vis = ownVisible(el);
     const aria = (el.getAttribute("aria-label") || "").replace(/\s+/g, " ").trim().toLowerCase();
     const raw = (el.textContent || "").replace(/\s+/g, " ").trim().toLowerCase();
+    if (/\badd friend\b/.test(raw) || /\badd friend\b/.test(aria)) {
+      if (!(vis === "invite" || vis.startsWith("invite "))) return false;
+    }
     if (/\bfollow\b/.test(raw) || /\bfollow\b/.test(aria)) {
       if (!(vis === "invite" || vis.startsWith("invite "))) return false;
     }
@@ -721,6 +740,11 @@
       const key = personKey(row);
       if (key && recentSet.has(key)) {
         freeRow(row);
+        continue;
+      }
+      if (isAddFriendControl(target)) {
+        target.dataset.aegisDone = "1";
+        log("Skipped Add Friend", "info");
         continue;
       }
       const followed = isFollowControl(target);
